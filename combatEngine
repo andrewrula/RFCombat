@@ -1,41 +1,89 @@
-//Hello World
-
-function RFCombat(loggingBoolean){
-    console.log("Hello World. Initializing.");
-
-//Sets up a louder logging mode via the 'wantLogs' flag
-    var wantLogs = loggingBoolean || "FALSE";
-    if(wantLogs = "TRUE"){
-        console.log ("Excessive Logging Mode:Activated") 
+//Initialization
+console.log("Hello World. Initializing.");
+var mechList = {//Provides a list of mechs for the game to draw upon
+    mechListFormat:{
+        id: "mechtypename",
+        faction: "mechtypicalfaction",
+        hp: 1,
+        attack: 1,
+        speed: 1,
+    },
+    phoenix: {
+        id:"phoenix",
+        faction: "izaria",
+        hp: 10,
+        attack: 2,
+        speed: 2 
+    },
+    pinch:{
+        id:"pinch",
+        faction: "kaiju",
+        hp: 3,
+        attack: 1,
+        speed: 7
     }
-    if(wantLogs = "FALSE"){
+ };
+console.log("mechList initialized with " + Object.keys(mechList).length + " types of unit.");
+var fighters = [];
+var wantLogs = false;
+
+//Administrative Tools
+function setlogging(loggingBoolean){
+    //Sets up a louder logging mode via the 'wantLogs' flag
+    if(loggingBoolean = true){
+        wantLogs = true
+        console.log ("Excessive Logging Mode: Activated") 
+    }
+    if(loggingBoolean = false){
+        wantLogs = false;
         console.log ("Excessive Logging Mode: Not Activated") 
         };
+};
 
-//Mechs
+//Battle!
+function addFighter(type,team){
+//Adds a fighter to either team 0 or team 1
+//Valid fighters are located in mechList.
 
+    //Logs
+    if(wantLogs == true){
+        console.log("Current fighters is: ")
+        console.log(fighters)
+        console.log("Adding a " + type + " to team " + team)
+    };
+//Set fighters
+    fighters[team] = mechList[type];
+    if(wantLogs == true){
+        console.log("new fighter is: ")
+        console.log(fighters[team])
+    };
+};
 
-
-
+function getInitiative(){//Helper Function to create an initiative order.
+    var needInitiative = fighters
+    var iterate = 0    
+    while (needInitiative.length > 0){}
+};
+        
+function haveBattle(){
+    var turncount = 0
+    while (fighters[0].hp > 0 && fighters[1].hp > 0){
+        turncount = turncount + 1;
+        console.log("Begin Turn " + turncount + ".")
+        //Establish Initiative Order
+        var initiativeOrder = getInitiative();
+        //Go through each mech on list in speed order
+            //Deal Damage to opposing fighter.
+            //Check for death
+        //Start over
+    }
 };
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-RFCombat ("TRUE");
-RFCombat ();
+//Tests
+setlogging(true);
+addFighter("phoenix",0)
+addFighter("pinch",1)
+console.log("The fighters are:")
+console.log(fighters);
