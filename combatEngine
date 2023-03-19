@@ -26,15 +26,16 @@ var mechList = {//Provides a list of mechs for the game to draw upon
 console.log("mechList initialized with " + Object.keys(mechList).length + " types of unit.");
 var fighters = [];
 var wantLogs = false;
+console.log(wantLogs)
 
 //Administrative Tools
 function setlogging(loggingBoolean){
     //Sets up a louder logging mode via the 'wantLogs' flag
-    if(loggingBoolean = true){
+    if(loggingBoolean == true){
         wantLogs = true
         console.log ("Excessive Logging Mode: Activated") 
     }
-    if(loggingBoolean = false){
+    if(loggingBoolean == false){
         wantLogs = false;
         console.log ("Excessive Logging Mode: Not Activated") 
         };
@@ -60,11 +61,34 @@ function addFighter(type,team){
 };
 
 function getInitiative(){//Helper Function to create an initiative order.
+    var initiativeOrder = [];
     var needInitiative = fighters
-    var iterate = 0    
-    while (needInitiative.length > 0){}
+    //Finds the highest initiative of the unassigned units and moves it to the initiativeOrder array, repeats until no more need Initiative, then returns that array. Ties go to the unit earlier in the list.
+    while(needInitiative.length > 0){
+        if(wantLogs = true){
+            console.log("need Initiative is length " + needInitiative.length + " and contains: ")
+            console.log (needInitiative)
+        };
+        topInit = -999
+        for(const i in needInitiative){
+            if(wantLogs == true){
+                console.log("i is " + i);
+                console.log("current i's speed is: " + needInitiative[i].speed);
+            };
+            if (needInitiative[i].speed > topInit){
+                topInit = fighters[i].speed
+                topInitIndex = i
+            };
+        };
+        initiativeOrder.push(needInitiative.splice(topInitIndex,1)) 
+    };
+    if(wantLogs = true){
+        console.log("Initiative Order Is:")
+    console.log(initiativeOrder);
+    };
+    return initiativeOrder; 
 };
-        
+
 function haveBattle(){
     var turncount = 0
     while (fighters[0].hp > 0 && fighters[1].hp > 0){
@@ -72,10 +96,16 @@ function haveBattle(){
         console.log("Begin Turn " + turncount + ".")
         //Establish Initiative Order
         var initiativeOrder = getInitiative();
+        
+        
+        //Ends battle immediately
+        fighters[1].hp = 0;
+        
         //Go through each mech on list in speed order
             //Deal Damage to opposing fighter.
             //Check for death
         //Start over
+
     }
 };
 
@@ -85,5 +115,6 @@ function haveBattle(){
 setlogging(true);
 addFighter("phoenix",0)
 addFighter("pinch",1)
-console.log("The fighters are:")
-console.log(fighters);
+//console.log("The fighters are:");
+//console.log(fighters);
+haveBattle();
