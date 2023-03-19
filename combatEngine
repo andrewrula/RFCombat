@@ -1,1 +1,41 @@
 //Hello World
+
+function RFCombat(loggingBoolean){
+    console.log("Hello World. Initializing.");
+
+//Sets up a louder logging mode via the 'wantLogs' flag
+    var wantLogs = loggingBoolean || "FALSE";
+    if(wantLogs = "TRUE"){
+        console.log ("Excessive Logging Mode:Activated") 
+    }
+    if(wantLogs = "FALSE"){
+        console.log ("Excessive Logging Mode: Not Activated") 
+        };
+
+//Mechs
+
+
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RFCombat ("TRUE");
+RFCombat ();
