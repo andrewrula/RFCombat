@@ -90,65 +90,65 @@ function getInitiative(){//Helper Function to create an initiative order.
 };
 
 function haveBattle(){
-    var turncount = 0
+    var turncount = 0;
+    var oppMechTeam = -1;
     while(fighters.filter(x => x.hp > 0).length > 1){
         turncount = turncount + 1;
         console.log("Begin Turn " + turncount + ".")
+        
         //Establish Initiative Order
-        console.log("Pre-Initiative Fighters")
-        console.log(fighters);
         var initiativeOrder = getInitiative();
-        console.log("is fighters lost?");
-        console.log(fighters);
         for (const i in initiativeOrder){
             console.log("Initiative Order has " + initiativeOrder.length + " units. We are on...")
             console.log("i = " + i);
 
             //The Attack!
             //Find Current Mech
-            var currentMech = initiativeOrder[i][0]
-            console.log(currentMech)
+                var currentMechArray = [...initiativeOrder[i]]
+                var currentMechObj = currentMechArray[0];
+                console.log(currentMechObj);
             //Find Current Mech's Attack Value
-            var attackDamage = currentMech.attack;
-            console.log("Attack is " + attackDamage);
+                var attackDamage = currentMechObj.attack;
+                console.log("Attack is " + attackDamage);
             //Which team are you on?
-            var currentMechTeam = null
-            var oppMechTeam = null
-            console.log(fighters)
-            console.log(currentMech)
-            //INVESTIGATE WHATS WRONG WITH THIS J
-            for(const j in fighters){
-                if(fighters[j].id == currentMech[0].id){
-                    currentMechTeam = i;
-                    console.log("Setting team to " + currentMechTeam);
-                }
-            };
-            //Invert. This is sloppy.
-            if(currentMechTeam == 0){
-                oppMechTeam == 1;
-            };
-            if(currentMechTeam == 1){
-                oppMechTeam == 0;
-            };
-            console.log("oppMechTeam is " + oppMechTeam);
-            //var targetMech = 0;
+                var currentMechTeam = null
+                for(const j in fighters){
+                    if(fighters[j].id == currentMechObj.id){
+                        currentMechTeam = j;
+                        console.log("Setting active team to " + currentMechTeam);
+                        break;                    
+                    }
+                };         
+            //Invert to find opponents. This is sloppy.
+                if(currentMechTeam == 0){
+                    oppMechTeam = 1;
+                };
+                if(currentMechTeam == 1){
+                    oppMechTeam = 0;
+                };
+                console.log("oppMechTeam is " + oppMechTeam);
+            //Fire and Decrement HP
+                console.log("Target Acquired." + fighters[oppMechTeam].id + " has " + fighters[oppMechTeam].hp + " Hit Points. Firing Weapon for " + attackDamage + " damage.")
+                fighters[oppMechTeam].hp -= attackDamage;
+                console.log("Target hit! Now it only has " + fighters[oppMechTeam].hp + " Hit Points!")
+            //Kill Checker
+                //TODO: Rewrite this eventually to check for any deaths not just the target.
+                if (fighters[oppMechTeam].hp < 1){
+                console.log("The " + fighters[oppMechTeam].id + " explodes and is removed from combat!")
+                fighters.splice(oppMechTeam,1)
+                }    
         };
-        
-        //Ends battle immediately
-        fighters[0][0].hp = 0;
-        
-        //Go through each mech on list in speed order
-            //Deal Damage to opposing fighter.
-            //Check for death
-        //Start over
-
     }
 };
-
 
 
 //Tests
 setlogging(true);
 addFighter("phoenix",0)
 addFighter("pinch",1)
+console.log("Pre Battle Fighters")
+console.log(fighters);
 haveBattle();
+
+console.log("END SIMULATION");
+console.log(mechList);
