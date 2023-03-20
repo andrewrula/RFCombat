@@ -62,25 +62,25 @@ function addFighter(type,team){
 
 function getInitiative(){//Helper Function to create an initiative order.
     var initiativeOrder = [];
-    var needInitiative = fighters
+    var needInitiative = [...fighters];
     //Finds the highest initiative of the unassigned units and moves it to the initiativeOrder array, repeats until no more need Initiative, then returns that array. Ties go to the unit earlier in the list.
     while(needInitiative.length > 0){
         if(wantLogs = true){
             console.log("need Initiative is length " + needInitiative.length + " and contains: ")
             console.log (needInitiative)
         };
-        topInit = -999
+        topInit = Number.MIN_SAFE_INTEGER
         for(const i in needInitiative){
             if(wantLogs == true){
                 console.log("i is " + i);
                 console.log("current i's speed is: " + needInitiative[i].speed);
             };
             if (needInitiative[i].speed > topInit){
-                topInit = fighters[i].speed
+                topInit = needInitiative[i].speed
                 topInitIndex = i
             };
-        };
-        initiativeOrder.push(needInitiative.splice(topInitIndex,1)) 
+        };    
+        initiativeOrder.push(needInitiative.splice(topInitIndex,1))
     };
     if(wantLogs = true){
         console.log("Initiative Order Is:")
@@ -91,15 +91,51 @@ function getInitiative(){//Helper Function to create an initiative order.
 
 function haveBattle(){
     var turncount = 0
-    while (fighters[0].hp > 0 && fighters[1].hp > 0){
+    while(fighters.filter(x => x.hp > 0).length > 1){
         turncount = turncount + 1;
         console.log("Begin Turn " + turncount + ".")
         //Establish Initiative Order
+        console.log("Pre-Initiative Fighters")
+        console.log(fighters);
         var initiativeOrder = getInitiative();
-        
+        console.log("is fighters lost?");
+        console.log(fighters);
+        for (const i in initiativeOrder){
+            console.log("Initiative Order has " + initiativeOrder.length + " units. We are on...")
+            console.log("i = " + i);
+
+            //The Attack!
+            //Find Current Mech
+            var currentMech = initiativeOrder[i][0]
+            console.log(currentMech)
+            //Find Current Mech's Attack Value
+            var attackDamage = currentMech.attack;
+            console.log("Attack is " + attackDamage);
+            //Which team are you on?
+            var currentMechTeam = null
+            var oppMechTeam = null
+            console.log(fighters)
+            console.log(currentMech)
+            //INVESTIGATE WHATS WRONG WITH THIS J
+            for(const j in fighters){
+                if(fighters[j].id == currentMech[0].id){
+                    currentMechTeam = i;
+                    console.log("Setting team to " + currentMechTeam);
+                }
+            };
+            //Invert. This is sloppy.
+            if(currentMechTeam == 0){
+                oppMechTeam == 1;
+            };
+            if(currentMechTeam == 1){
+                oppMechTeam == 0;
+            };
+            console.log("oppMechTeam is " + oppMechTeam);
+            //var targetMech = 0;
+        };
         
         //Ends battle immediately
-        fighters[1].hp = 0;
+        fighters[0][0].hp = 0;
         
         //Go through each mech on list in speed order
             //Deal Damage to opposing fighter.
@@ -115,6 +151,4 @@ function haveBattle(){
 setlogging(true);
 addFighter("phoenix",0)
 addFighter("pinch",1)
-//console.log("The fighters are:");
-//console.log(fighters);
 haveBattle();
