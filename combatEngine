@@ -26,15 +26,16 @@ var mechList = {//Provides a list of mechs for the game to draw upon
 console.log("mechList initialized with " + Object.keys(mechList).length + " types of unit.");
 var fighters = [];
 var wantLogs = false;
+console.log(wantLogs)
 
 //Administrative Tools
 function setlogging(loggingBoolean){
     //Sets up a louder logging mode via the 'wantLogs' flag
-    if(loggingBoolean = true){
+    if(loggingBoolean == true){
         wantLogs = true
         console.log ("Excessive Logging Mode: Activated") 
     }
-    if(loggingBoolean = false){
+    if(loggingBoolean == false){
         wantLogs = false;
         console.log ("Excessive Logging Mode: Not Activated") 
         };
@@ -60,30 +61,94 @@ function addFighter(type,team){
 };
 
 function getInitiative(){//Helper Function to create an initiative order.
-    var needInitiative = fighters
-    var iterate = 0    
-    while (needInitiative.length > 0){}
-};
-        
-function haveBattle(){
-    var turncount = 0
-    while (fighters[0].hp > 0 && fighters[1].hp > 0){
-        turncount = turncount + 1;
-        console.log("Begin Turn " + turncount + ".")
-        //Establish Initiative Order
-        var initiativeOrder = getInitiative();
-        //Go through each mech on list in speed order
-            //Deal Damage to opposing fighter.
-            //Check for death
-        //Start over
-    }
+    var initiativeOrder = [];
+    var needInitiative = [...fighters];
+    //Finds the highest initiative of the unassigned units and moves it to the initiativeOrder array, repeats until no more need Initiative, then returns that array. Ties go to the unit earlier in the list.
+    while(needInitiative.length > 0){
+        if(wantLogs = true){
+            console.log("need Initiative is length " + needInitiative.length + " and contains: ")
+            console.log (needInitiative)
+        };
+        topInit = Number.MIN_SAFE_INTEGER
+        for(const i in needInitiative){
+            if(wantLogs == true){
+                console.log("i is " + i);
+                console.log("current i's speed is: " + needInitiative[i].speed);
+            };
+            if (needInitiative[i].speed > topInit){
+                topInit = needInitiative[i].speed
+                topInitIndex = i
+            };
+        };    
+        initiativeOrder.push(needInitiative.splice(topInitIndex,1))
+    };
+    if(wantLogs = true){
+        console.log("Initiative Order Is:")
+    console.log(initiativeOrder);
+    };
+    return initiativeOrder; 
 };
 
+function haveBattle(){
+    var turncount = 0;
+    var oppMechTeam = -1;
+    while(fighters.filter(x => x.hp > 0).length > 1){
+        turncount = turncount + 1;
+        console.log("Begin Turn " + turncount + ".")
+        
+        //Establish Initiative Order
+        var initiativeOrder = getInitiative();
+        for (const i in initiativeOrder){
+            console.log("Initiative Order has " + initiativeOrder.length + " units. We are on...")
+            console.log("i = " + i);
+
+            //The Attack!
+            //Find Current Mech
+                var currentMechArray = [...initiativeOrder[i]]
+                var currentMechObj = currentMechArray[0];
+                console.log(currentMechObj);
+            //Find Current Mech's Attack Value
+                var attackDamage = currentMechObj.attack;
+                console.log("Attack is " + attackDamage);
+            //Which team are you on?
+                var currentMechTeam = null
+                for(const j in fighters){
+                    if(fighters[j].id == currentMechObj.id){
+                        currentMechTeam = j;
+                        console.log("Setting active team to " + currentMechTeam);
+                        break;                    
+                    }
+                };         
+            //Invert to find opponents. This is sloppy.
+                if(currentMechTeam == 0){
+                    oppMechTeam = 1;
+                };
+                if(currentMechTeam == 1){
+                    oppMechTeam = 0;
+                };
+                console.log("oppMechTeam is " + oppMechTeam);
+            //Fire and Decrement HP
+                console.log("Target Acquired." + fighters[oppMechTeam].id + " has " + fighters[oppMechTeam].hp + " Hit Points. Firing Weapon for " + attackDamage + " damage.")
+                fighters[oppMechTeam].hp -= attackDamage;
+                console.log("Target hit! Now it only has " + fighters[oppMechTeam].hp + " Hit Points!")
+            //Kill Checker
+                //TODO: Rewrite this eventually to check for any deaths not just the target.
+                if (fighters[oppMechTeam].hp < 1){
+                console.log("The " + fighters[oppMechTeam].id + " explodes and is removed from combat!")
+                fighters.splice(oppMechTeam,1)
+                }    
+        };
+    }
+};
 
 
 //Tests
 setlogging(true);
 addFighter("phoenix",0)
 addFighter("pinch",1)
-console.log("The fighters are:")
+console.log("Pre Battle Fighters")
 console.log(fighters);
+haveBattle();
+
+console.log("END SIMULATION");
+console.log(mechList);
