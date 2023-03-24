@@ -3,7 +3,8 @@ console.log("Hello World. Initializing.");
 var mechList = {//Provides a list of mechs for the game to draw upon
     mechListFormat:{
         id: "mechtypename",
-        faction: "mechtypicalfaction",
+        faction: "mechtypefaction",
+        maxHP: 1,
         hp: 1,
         attack: 1,
         speed: 1,
@@ -11,6 +12,7 @@ var mechList = {//Provides a list of mechs for the game to draw upon
     phoenix: {
         id:"phoenix",
         faction: "izaria",
+        maxHP: 10,
         hp: 10,
         attack: 2,
         speed: 2 
@@ -18,6 +20,7 @@ var mechList = {//Provides a list of mechs for the game to draw upon
     pinch:{
         id:"pinch",
         faction: "kaiju",
+        maxHP: 3,
         hp: 3,
         attack: 1,
         speed: 7
