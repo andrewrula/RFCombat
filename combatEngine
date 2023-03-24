@@ -1,11 +1,64 @@
 //Initialization
 console.log("Hello World. Initializing.");
+var prompt = require('prompt-sync')();
+var weaponList = {//Provides a list of weapons for use by game assets
+    weaponListFormat:{
+        weaponDamage: 5, //Damage dealt by weapon
+        weaponRange: 2, //Number of squares of range
+        cooldown: 0, //Number of turns of cooldown between uses. Set 0 for no cooldown.
+        ammo: 0, //Number of uses per mission. Set -1 for Limitless
+        type: "Light/Medium/Heavy/Ult", 
+        },
+    laserGun:{
+        weaponDamage: 2,
+        weaponRange: 10,
+        cooldown: 3,
+        ammo: 0,
+        type: "Light",     
+    },
+    bigGun: {
+        weaponDamage: 50,
+        weaponRange: 99,
+        cooldown: 10,
+        ammo: 1,
+        type: "Ult"
+    },
+    beamSword: {
+        weaponDamage: 7,
+        weaponRange: 1,
+        cooldown: 0,
+        ammo: 0,
+        type: "Medium"
+    },
+    claw: {
+        weaponDamage: 1,
+        weaponRange: 1,
+        cooldown: 0,
+        ammo: 0
+    },   
+ };
 var mechList = {//Provides a list of mechs for the game to draw upon
     mechListFormat:{
         id: "mechtypename",
         faction: "mechtypicalfaction",
         hp: 1,
-        attack: 1,
+        hardpoints: [
+            {hardpointName: "Hardpoint Name",
+            hardpointType: "Light/Medium/Heavy/Ultimate" 
+            },
+            {hardpointName: "Hardpoint 2 Name",
+            hardpointType: "Light/Medium/Heavy/Ultimate" 
+            },
+            {hardpointName: "Hardpoint 3 Name",
+            hardpointType: "Light/Medium/Heavy/Ultimate" 
+            }     
+        ],
+        subsystems: [
+            {subsystemName: "Subsystem Name",
+            subsystemType: "N/A" //TODO: Enumerate some of these. Covert, Marksman, Tank, Support, etc?
+            }
+        ],
+        attack: 1, //TODO: Deprecate mech-wide damage value in favor of the damageValue for the weapon.
         speed: 1,
     },
     phoenix: {
