@@ -39,10 +39,12 @@ var weaponList = {//Provides a list of weapons for use by game assets
         ammo: 0
     },   
  };
+ 
 var mechList = {//Provides a list of mechs for the game to draw upon
     mechListFormat:{
         id: "mechtypename",
-        faction: "mechtypicalfaction",
+        faction: "mechtypefaction",
+        maxHP: 1,
         hp: 1,
         hardpoints: [
             {hardpointName: "Hardpoint Name",
@@ -65,6 +67,7 @@ var mechList = {//Provides a list of mechs for the game to draw upon
     phoenix: {
         id:"phoenix",
         faction: "izaria",
+        maxHP: 10,
         hp: 10,
         hardpoints: [
             {hardpointName: "beamSword",
@@ -76,15 +79,54 @@ var mechList = {//Provides a list of mechs for the game to draw upon
     pinch:{
         id:"pinch",
         faction: "kaiju",
+        maxHP: 3,
+        hp: 3,
         hardpoints: [
             {hardpointName: "claw",
             hardpointType: "Small" 
             },
         ],
-        hp: 3,
         speed: 7
     }
- };
+};
+
+var pilotList = {
+    pilotListFormat: {
+        pilotName: "firstName lastName",
+        pilotRank: "Ensign/Lieutenant/Commander",
+        pilotAffinity: "Ring, Key, Both, Neither",
+        pilotLevel: 1,
+        pilotXP: 0,
+        pilotAbility: "abilityName",
+        pilotAim: 1.00,
+        pilotResponseTime: 1.00,
+
+
+    },
+    heero: {
+        pilotName: "Heero Yuy",
+        pilotRank: "Lieutenant",
+        pilotAffinityType: "Neither",
+        pilotAffinityValue: 0, 
+        pilotLevel: 1,
+        pilotXP: 0,
+        pilotAbility: "Overly Dramatic",
+        pilotAim: .85,
+        pilotResponseTime: .70,
+    },
+    duo: {
+        pilotName: "Duo Maxwell",
+        pilotRank: "Lieutenant",
+        pilotAffinityType: "Key",
+        pilotAffinityValue: 5, 
+        pilotLevel: 2,
+        pilotXP: 300,
+        pilotAbility: "Too Cool For School",
+        pilotAim: .50,
+        pilotResponseTime: .90,
+    },
+};
+
 console.log("mechList initialized with " + Object.keys(mechList).length + " types of unit.");
 var fighters = [];
 var wantLogs = false;
@@ -151,12 +193,13 @@ function getInitiative(){//Helper Function to create an initiative order.
     return initiativeOrder; 
 };
 
-function haveBattle(){
-    var turncount = 0;
+function haveBattle(){//Runs a battle.
+    var turnCount = 0;
     var oppMechTeam = -1;
+    var killList = [];
     while(fighters.filter(x => x.hp > 0).length > 1){
-        turncount = turncount + 1;
-        console.log("Begin Turn " + turncount + ".")
+        turnCount = turnCount + 1;
+        console.log("Begin Turn " + turnCount + ".")
         
         //Establish Initiative Order
         var initiativeOrder = getInitiative();
@@ -193,19 +236,29 @@ function haveBattle(){
                 };
                 console.log("oppMechTeam is " + oppMechTeam);
             //Fire and Decrement HP
-                console.log("Target Acquired." + fighters[oppMechTeam].id + " has " + fighters[oppMechTeam].hp + " Hit Points. Firing Weapon for " + attackDamage + " damage.")
+                console.log("Target Acquired. " + fighters[oppMechTeam].id + " has " + fighters[oppMechTeam].hp + " Hit Points. Firing Weapon for " + attackDamage + " damage.")
                 fighters[oppMechTeam].hp -= attackDamage;
                 console.log("Target hit! Now it only has " + fighters[oppMechTeam].hp + " Hit Points!")
             //Kill Checker
                 //TODO: Rewrite this eventually to check for any deaths not just the target.
                 if (fighters[oppMechTeam].hp < 1){
                 console.log("The " + fighters[oppMechTeam].id + " explodes and is removed from combat!")
-                fighters.splice(oppMechTeam,1)
+                killList = fighters.splice(oppMechTeam,1)
+                //TODO: only works with one opposing mech.
                 }    
         };
     }
+    endOfBattleMemo(turnCount, killList)
 };
 
+function endOfBattleMemo(turnCount, killList){ //Generates a memo detailing the end of the battle that took place.
+    console.log("======================")
+    console.log("End of Battle!");
+    console.log("Combat Ended in " + turnCount + " turns.");
+    console.log("Destroyed Units:");
+    console.log(killList);
+    console.log("Experience Points Gained: " + killList.length * 100 + " XP");
+}
 
 //Tests
 setlogging(true);
@@ -216,6 +269,5 @@ console.log(fighters);
 haveBattle();
 addFighter("pinch",1);
 haveBattle();
-
 console.log("END SIMULATION");
 console.log(fighters);
