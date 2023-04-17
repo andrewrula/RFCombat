@@ -1,5 +1,6 @@
 //Initialization
 console.log("Hello World. Initializing.");
+var prompt = require('prompt-sync')();
 var mechList = {//Provides a list of mechs for the game to draw upon
     mechListFormat:{
         id: "mechtypename",
