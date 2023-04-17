@@ -26,7 +26,45 @@ var mechList = {//Provides a list of mechs for the game to draw upon
         attack: 1,
         speed: 7
     }
- };
+};
+ 
+var pilotList = {
+    pilotListFormat: {
+        pilotName: "firstName lastName",
+        pilotRank: "Ensign/Lieutenant/Commander",
+        pilotAffinity: "Ring, Key, Both, Neither",
+        pilotLevel: 1,
+        pilotXP: 0,
+        pilotAbility: "abilityName",
+        pilotAim: 1.00,
+        pilotResponseTime: 1.00,
+
+
+    },
+    heero: {
+        pilotName: "Heero Yuy",
+        pilotRank: "Lieutenant",
+        pilotAffinityType: "Neither",
+        pilotAffinityValue: 0, 
+        pilotLevel: 1,
+        pilotXP: 0,
+        pilotAbility: "Overly Dramatic",
+        pilotAim: .85,
+        pilotResponseTime: .70,
+    },
+    duo: {
+        pilotName: "Duo Maxwell",
+        pilotRank: "Lieutenant",
+        pilotAffinityType: "Key",
+        pilotAffinityValue: 5, 
+        pilotLevel: 2,
+        pilotXP: 300,
+        pilotAbility: "Too Cool For School",
+        pilotAim: .50,
+        pilotResponseTime: .90,
+    },
+};
+
 console.log("mechList initialized with " + Object.keys(mechList).length + " types of unit.");
 var fighters = [];
 var wantLogs = false;
