@@ -1,9 +1,11 @@
 //Initialization
 console.log("Hello World. Initializing.");
+var prompt = require('prompt-sync')();
 var mechList = {//Provides a list of mechs for the game to draw upon
     mechListFormat:{
         id: "mechtypename",
-        faction: "mechtypicalfaction",
+        faction: "mechtypefaction",
+        maxHP: 1,
         hp: 1,
         attack: 1,
         speed: 1,
@@ -11,6 +13,7 @@ var mechList = {//Provides a list of mechs for the game to draw upon
     phoenix: {
         id:"phoenix",
         faction: "izaria",
+        maxHP: 10,
         hp: 10,
         attack: 2,
         speed: 2 
@@ -18,6 +21,7 @@ var mechList = {//Provides a list of mechs for the game to draw upon
     pinch:{
         id:"pinch",
         faction: "kaiju",
+        maxHP: 3,
         hp: 3,
         attack: 1,
         speed: 7
@@ -127,12 +131,13 @@ function getInitiative(){//Helper Function to create an initiative order.
     return initiativeOrder; 
 };
 
-function haveBattle(){
-    var turncount = 0;
+function haveBattle(){//Runs a battle.
+    var turnCount = 0;
     var oppMechTeam = -1;
+    var killList = [];
     while(fighters.filter(x => x.hp > 0).length > 1){
-        turncount = turncount + 1;
-        console.log("Begin Turn " + turncount + ".")
+        turnCount = turnCount + 1;
+        console.log("Begin Turn " + turnCount + ".")
         
         //Establish Initiative Order
         var initiativeOrder = getInitiative();
@@ -166,19 +171,29 @@ function haveBattle(){
                 };
                 console.log("oppMechTeam is " + oppMechTeam);
             //Fire and Decrement HP
-                console.log("Target Acquired." + fighters[oppMechTeam].id + " has " + fighters[oppMechTeam].hp + " Hit Points. Firing Weapon for " + attackDamage + " damage.")
+                console.log("Target Acquired. " + fighters[oppMechTeam].id + " has " + fighters[oppMechTeam].hp + " Hit Points. Firing Weapon for " + attackDamage + " damage.")
                 fighters[oppMechTeam].hp -= attackDamage;
                 console.log("Target hit! Now it only has " + fighters[oppMechTeam].hp + " Hit Points!")
             //Kill Checker
                 //TODO: Rewrite this eventually to check for any deaths not just the target.
                 if (fighters[oppMechTeam].hp < 1){
                 console.log("The " + fighters[oppMechTeam].id + " explodes and is removed from combat!")
-                fighters.splice(oppMechTeam,1)
+                killList = fighters.splice(oppMechTeam,1)
+                //TODO: only works with one opposing mech.
                 }    
         };
     }
+    endOfBattleMemo(turnCount, killList)
 };
 
+function endOfBattleMemo(turnCount, killList){ //Generates a memo detailing the end of the battle that took place.
+    console.log("======================")
+    console.log("End of Battle!");
+    console.log("Combat Ended in " + turnCount + " turns.");
+    console.log("Destroyed Units:");
+    console.log(killList);
+    console.log("Experience Points Gained: " + killList.length * 100 + " XP");
+}
 
 //Tests
 setlogging(true);
@@ -187,6 +202,3 @@ addFighter("pinch",1)
 console.log("Pre Battle Fighters")
 console.log(fighters);
 haveBattle();
-
-console.log("END SIMULATION");
-console.log(mechList);
