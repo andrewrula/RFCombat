@@ -251,6 +251,22 @@ function haveBattle(){//Runs a battle.
     endOfBattleMemo(turnCount, killList)
 };
 
+function generateMap(maxXCoord, maxYCoord){
+    console.log("Max X is " + maxXCoord);
+    console.log("Max Y is " + maxYCoord);
+    var outputMap = [];
+    for (let currX = 0; currX <= maxXCoord; currX++){
+        outputMap[currX] = [];
+        console.log("x is " + currX);
+        for (let currY = 0; currY <= maxYCoord; currY++){
+            console.log("y is " + currY);
+            outputMap[currX][currY] = currX + "," + currY;
+        }; 
+    };
+    console.log(outputMap);
+    return outputMap;
+};
+
 function endOfBattleMemo(turnCount, killList){ //Generates a memo detailing the end of the battle that took place.
     console.log("======================")
     console.log("End of Battle!");
@@ -261,6 +277,7 @@ function endOfBattleMemo(turnCount, killList){ //Generates a memo detailing the 
 }
 
 //Tests
+/*
 setlogging(true);
 addFighter("phoenix",0)
 addFighter("pinch",1);
@@ -271,3 +288,6 @@ addFighter("pinch",1);
 haveBattle();
 console.log("END SIMULATION");
 console.log(fighters);
+*/
+
+generateMap(20,3);
