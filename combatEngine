@@ -1,13 +1,67 @@
 //Initialization
 console.log("Hello World. Initializing.");
 var prompt = require('prompt-sync')();
+
+var weaponList = {//Provides a list of weapons for use by game assets
+    weaponListFormat:{
+        displayName: "Weapon Name", //User-facing display name 
+        weaponDamage: 5, //Damage dealt by weapon
+        weaponRange: 2, //Number of squares of range
+        cooldown: 0, //Number of turns of cooldown between uses. Set 0 for no cooldown.
+        ammo: 0, //Number of uses per mission. Set -1 for Limitless
+        type: "Light/Medium/Heavy/Ult",
+        },
+    laserGun:{
+        weaponDamage: 2,
+        weaponRange: 10,
+        cooldown: 3,
+        ammo: 0,
+        type: "Light",     
+    },
+    bigGun: {
+        weaponDamage: 50,
+        weaponRange: 99,
+        cooldown: 10,
+        ammo: 1,
+        type: "Ult"
+    },
+    beamSword: {
+        weaponDamage: 7,
+        weaponRange: 1,
+        cooldown: 0,
+        ammo: 0,
+        type: "Medium"
+    },
+    claw: {
+        weaponDamage: 1,
+        weaponRange: 1,
+        cooldown: 0,
+        ammo: 0
+    },   
+ };
+ 
 var mechList = {//Provides a list of mechs for the game to draw upon
     mechListFormat:{
         id: "mechtypename",
         faction: "mechtypefaction",
         maxHP: 1,
         hp: 1,
-        attack: 1,
+        hardpoints: [
+            {hardpointName: "Hardpoint Name",
+            hardpointType: "Light/Medium/Heavy/Ultimate" 
+            },
+            {hardpointName: "Hardpoint 2 Name",
+            hardpointType: "Light/Medium/Heavy/Ultimate" 
+            },
+            {hardpointName: "Hardpoint 3 Name",
+            hardpointType: "Light/Medium/Heavy/Ultimate" 
+            }     
+        ],
+        subsystems: [
+            {subsystemName: "Subsystem Name",
+            subsystemType: "N/A" //TODO: Enumerate some of these. Covert, Marksman, Tank, Support, etc?
+            }
+        ],
         speed: 1,
     },
     phoenix: {
@@ -15,7 +69,11 @@ var mechList = {//Provides a list of mechs for the game to draw upon
         faction: "izaria",
         maxHP: 10,
         hp: 10,
-        attack: 2,
+        hardpoints: [
+            {hardpointName: "beamSword",
+            hardpointType: "Medium" 
+            },
+        ],
         speed: 2 
     },
     pinch:{
@@ -23,11 +81,15 @@ var mechList = {//Provides a list of mechs for the game to draw upon
         faction: "kaiju",
         maxHP: 3,
         hp: 3,
-        attack: 1,
+        hardpoints: [
+            {hardpointName: "claw",
+            hardpointType: "Small" 
+            },
+        ],
         speed: 7
     }
 };
- 
+
 var pilotList = {
     pilotListFormat: {
         pilotName: "firstName lastName",
@@ -95,7 +157,7 @@ function addFighter(type,team){
         console.log("Adding a " + type + " to team " + team)
     };
 //Set fighters
-    fighters[team] = mechList[type];
+    fighters[team] = JSON.parse(JSON.stringify(mechList[type]));
     if(wantLogs == true){
         console.log("new fighter is: ")
         console.log(fighters[team])
@@ -150,8 +212,11 @@ function haveBattle(){//Runs a battle.
                 var currentMechArray = [...initiativeOrder[i]]
                 var currentMechObj = currentMechArray[0];
                 console.log(currentMechObj);
-            //Find Current Mech's Attack Value
-                var attackDamage = currentMechObj.attack;
+            //How many weapons does the mech have?
+                //if one, use that
+                //if more than one, prompt user to select one
+            //Find Current Mech's Selected Weapon Attack Value
+                var attackDamage = weaponList[currentMechObj.hardpoints[0].hardpointName].weaponDamage;
                 console.log("Attack is " + attackDamage);
             //Which team are you on?
                 var currentMechTeam = null
@@ -198,7 +263,11 @@ function endOfBattleMemo(turnCount, killList){ //Generates a memo detailing the 
 //Tests
 setlogging(true);
 addFighter("phoenix",0)
-addFighter("pinch",1)
-console.log("Pre Battle Fighters")
+addFighter("pinch",1);
+console.log("Pre Battle Fighters");
 console.log(fighters);
 haveBattle();
+addFighter("pinch",1);
+haveBattle();
+console.log("END SIMULATION");
+console.log(fighters);
